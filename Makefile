@@ -1,4 +1,3 @@
-
 N2N_VERSION=2.1.0
 N2N_OSNAME=$(shell uname -p)
 
@@ -52,7 +51,15 @@ N2N_LIB=n2n.a
 N2N_OBJS=n2n.o n2n_net.o n2n_keyfile.o n2n_list.o wire.o minilzo.o twofish.o \
          transform_null.o transform_tf.o transform_aes.o
          
-XNIX_OBJS=tuntap_freebsd.o tuntap_netbsd.o tuntap_linux.o tuntap_osx.o version.o
+XNIX_OBJS=tuntap_freebsd.o tuntap_netbsd.o tuntap_osx.o version.o
+
+ifneq (,$(wildcard /sbin/ip))
+XNIX_OBJS+=tuntap_linux_iproute.o
+endif
+
+ifneq (, $(wildcard /sbin/ifconfig))
+XNIX_OBJS+=tuntap_linux.o
+endif
          
 WIN32_DIR=win32
 WIN32_OBJS=$(WIN32_DIR)/wintap.o $(WIN32_DIR)/version-msvc.o
